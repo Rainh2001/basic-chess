@@ -2,3 +2,7 @@
     padding: 0;
     margin: 0;
 }
+
+#chess {
+    border: 1px solid black;
+}
