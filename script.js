@@ -8,6 +8,9 @@ const col = 8;
 var width;
 var height;
 
+var black;
+var white;
+
 class Board {
     constructor(){
         this.pos = [];
@@ -17,8 +20,9 @@ class Board {
             isBlack = !isBlack;
             for(let j = 0; j < row; j++){
                 this.pos[i].push({x: j*width, y: i*height});
+                this.pos[i][j].color = isBlack ? "black" : "white";
                 ctx.beginPath(); 
-                ctx.fillStyle = isBlack ? "black" : "white";
+                ctx.fillStyle = this.pos[i][j].color;
                 ctx.fillRect(j*width, i*height, width, height);
                 ctx.closePath();
                 isBlack = !isBlack;
@@ -27,10 +31,22 @@ class Board {
     }
 }
 
+class Player {
+    constructor(color){
+        this.color = color;
+        this.pawn = [];
+        this.bishop = [];
+        this.rook = [];
+        this.knight = [];
+        this.king;
+        this.queen;
+    }
+}
+
 class Pawn {
-    constructor(){
+    constructor(isBlack){
         this.img = new Image();
-        this.img.src = "img/pawn.png";
+        this.img.src = isBlack ? "img/blackPawn.png" : "img/whitePawn.png";
         this.x;
         this.y;                                                                                                                                                                                                                 
     }
@@ -40,6 +56,7 @@ class Pawn {
         ctx.beginPath();
         ctx.drawImage(this.img, pos.x, pos.y, width, height);
         ctx.closePath();
+        return true;
     }
 }
 
@@ -55,17 +72,25 @@ window.onload = function(){
 
 function setup(){
     board = new Board();
-    let pawn = [];
-    let line = 1;
+
+    black = new Player("black");
+    white = new Player("white");
+    
     for(let i = 0; i < 2; i++){
-        pawn.push([]);
+        let pawn = [];
+        let isBlack = i === 0 ? true : false;
         for(let j = 0; j < col; j++){
-            pawn[i].push(new Pawn());
-            pawn[i][j].img.onload = function(){
-                pawn[i][j].draw(board.pos[line][j]);
+            pawn.push(new Pawn(isBlack));
+            pawn[j].img.onload = function(){
+                let line = i === 0 ? 1 : 6;
+                pawn[i].draw(board.pos[line][j]);
             }
         }
-        line = 6;
+        if(isBlack){
+            black.pawn = pawn;
+        } else {
+            white.pawn = pawn;
+        }
     }
-    console.log(pawn);
+    console.log({White: white.pawn, Black: black.pawn});
 }

@@ -3,6 +3,10 @@
     margin: 0;
 }
 
+.game {
+    text-align: center;
+}
+
 #chess {
     border: 1px solid black;
 }
