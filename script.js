@@ -44,19 +44,16 @@ class Player {
 }
 
 class Pawn {
-    constructor(isBlack){
+    constructor(isBlack, pos){
         this.img = new Image();
         this.img.src = isBlack ? "img/blackPawn.png" : "img/whitePawn.png";
-        this.x;
-        this.y;                                                                                                                                                                                                                 
-    }
-    draw(pos){
         this.x = pos.x;
-        this.y = pos.y;
+        this.y = pos.y;                                                                                                                                                                                                         
+    }
+    draw(){
         ctx.beginPath();
-        ctx.drawImage(this.img, pos.x, pos.y, width, height);
+        ctx.drawImage(this.img, this.x, this.y, width, height);
         ctx.closePath();
-        return true;
     }
 }
 
@@ -80,10 +77,10 @@ function setup(){
         let pawn = [];
         let isBlack = i === 0 ? true : false;
         for(let j = 0; j < col; j++){
-            pawn.push(new Pawn(isBlack));
+            let line = i === 0 ? 1 : 6;
+            pawn.push(new Pawn(isBlack, board.pos[line][j]));
             pawn[j].img.onload = function(){
-                let line = i === 0 ? 1 : 6;
-                pawn[i].draw(board.pos[line][j]);
+                pawn[j].draw();
             }
         }
         if(isBlack){
@@ -92,5 +89,4 @@ function setup(){
             white.pawn = pawn;
         }
     }
-    console.log({White: white.pawn, Black: black.pawn});
 }
