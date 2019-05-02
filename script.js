@@ -43,10 +43,9 @@ class Player {
     }
 }
 
-class Pawn {
-    constructor(isBlack, pos){
+class ChessPiece {
+    constructor(pos){
         this.img = new Image();
-        this.img.src = isBlack ? "img/blackPawn.png" : "img/whitePawn.png";
         this.x = pos.x;
         this.y = pos.y;                                                                                                                                                                                                         
     }
@@ -54,6 +53,27 @@ class Pawn {
         ctx.beginPath();
         ctx.drawImage(this.img, this.x, this.y, width, height);
         ctx.closePath();
+    }
+}
+
+class Pawn extends ChessPiece {
+    constructor(isBlack, pos){
+        super(pos);
+        this.img.src = isBlack ? "img/blackPawn.png" : "img/whitePawn.png";                                                                                                                                                                                                      
+    }
+}
+
+class Rook extends ChessPiece {
+    constructor(isBlack, pos){
+        super(pos);
+        this.img.src = isBlack ? "img/blackRook.png" : "img/whiteRook.png";
+    }
+}
+
+class Bishop extends ChessPiece {
+    constructor(isBlack, pos){
+        super(pos);
+        this.img.src = isBlack ? "img/blackBishop.png" : "img/whiteBishop.png";
     }
 }
 
@@ -74,19 +94,49 @@ function setup(){
     white = new Player("white");
     
     for(let i = 0; i < 2; i++){
-        let pawn = [];
         let isBlack = i === 0 ? true : false;
+        let line = i === 0 ? 0 : 7;
+        
+        // Pawn creation
+        let pawn = [];
         for(let j = 0; j < col; j++){
-            let line = i === 0 ? 1 : 6;
-            pawn.push(new Pawn(isBlack, board.pos[line][j]));
+            let pawnLine = i === 0 ? 1 : 6;
+            pawn.push(new Pawn(isBlack, board.pos[pawnLine][j]));
             pawn[j].img.onload = function(){
                 pawn[j].draw();
             }
         }
+
+        // Rook creation
+        let rook = [];
+        for(let j = 0; j < 2; j++){
+            rook.push(new Rook(isBlack, board.pos[line][j*7]));
+            rook[j].img.onload = function(){
+                rook[j].draw();
+            }
+        }
+
+        // Bishop creation
+        let bishop = [];
+        for(let j = 0; j < 2; j++){
+            bishop.push(new Bishop(isBlack, board.pos[line][j*3+2]));
+            bishop[j].img.onload = function(){
+                bishop[j].draw();
+            }
+        }
+
+        // Knight creation
+
+        // Queen creation
+
+        //King creation
         if(isBlack){
             black.pawn = pawn;
+            black.rook = rook;
         } else {
             white.pawn = pawn;
+            white.rook = rook;
         }
     }
+    console.log({White: white, Black: black});
 }
