@@ -27,6 +27,22 @@ class Board {
     }
 }
 
+class Pawn {
+    constructor(){
+        this.img = new Image();
+        this.img.src = "img/pawn.png";
+        this.x;
+        this.y;                                                                                                                                                                                                                 
+    }
+    draw(pos){
+        this.x = pos.x;
+        this.y = pos.y;
+        ctx.beginPath();
+        ctx.drawImage(this.img, pos.x, pos.y, width, height);
+        ctx.closePath();
+    }
+}
+
 window.onload = function(){
     canvas = document.getElementById("chess");
     ctx = canvas.getContext("2d");
@@ -39,4 +55,17 @@ window.onload = function(){
 
 function setup(){
     board = new Board();
+    let pawn = [];
+    let line = 1;
+    for(let i = 0; i < 2; i++){
+        pawn.push([]);
+        for(let j = 0; j < col; j++){
+            pawn[i].push(new Pawn());
+            pawn[i][j].img.onload = function(){
+                pawn[i][j].draw(board.pos[line][j]);
+            }
+        }
+        line = 6;
+    }
+    console.log(pawn);
 }
