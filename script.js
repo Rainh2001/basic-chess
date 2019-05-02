@@ -133,9 +133,11 @@ function setup(){
         if(isBlack){
             black.pawn = pawn;
             black.rook = rook;
+            black.bishop = bishop;
         } else {
             white.pawn = pawn;
             white.rook = rook;
+            white.bishop = bishop;
         }
     }
     console.log({White: white, Black: black});
