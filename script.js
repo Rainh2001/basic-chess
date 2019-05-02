@@ -77,6 +77,27 @@ class Bishop extends ChessPiece {
     }
 }
 
+class Knight extends ChessPiece {
+    constructor(isBlack, pos){
+        super(pos);
+        this.img.src = isBlack ? "img/blackKnight.png" : "img/whiteKnight.png";
+    }
+}
+
+class Queen extends ChessPiece {
+    constructor(isBlack, pos){
+        super(pos);
+        this.img.src = isBlack ? "img/blackQueen.png" : "img/whiteQueen.png";
+    }
+}
+
+class King extends ChessPiece {
+    constructor(isBlack, pos){
+        super(pos);
+        this.img.src = isBlack ? "img/blackKing.png" : "img/whiteKing.png";
+    }
+}
+
 window.onload = function(){
     canvas = document.getElementById("chess");
     ctx = canvas.getContext("2d");
@@ -107,37 +128,51 @@ function setup(){
             }
         }
 
-        // Rook creation
+        // Rook, bishop, and knight creation
         let rook = [];
+        let bishop = [];
+        let knight = [];
         for(let j = 0; j < 2; j++){
             rook.push(new Rook(isBlack, board.pos[line][j*7]));
             rook[j].img.onload = function(){
                 rook[j].draw();
             }
-        }
-
-        // Bishop creation
-        let bishop = [];
-        for(let j = 0; j < 2; j++){
             bishop.push(new Bishop(isBlack, board.pos[line][j*3+2]));
             bishop[j].img.onload = function(){
                 bishop[j].draw();
             }
+            knight.push(new Knight(isBlack, board.pos[line][j*5+1]));
+            knight[j].img.onload = function(){
+                knight[j].draw();
+            }
         }
 
-        // Knight creation
-
         // Queen creation
+        let queen = new Queen(isBlack, board.pos[line][4]);
+        queen.img.onload = function(){
+            queen.draw();
+        }
 
-        //King creation
+        // King creation
+        let king = new King(isBlack, board.pos[line][3]);
+        king.img.onload = function(){
+            king.draw();
+        }
+
         if(isBlack){
             black.pawn = pawn;
             black.rook = rook;
             black.bishop = bishop;
+            black.knight = knight;
+            black.queen = queen;
+            black.king = king;
         } else {
             white.pawn = pawn;
             white.rook = rook;
             white.bishop = bishop;
+            white.knight = knight;
+            white.queen = queen;
+            white.king = king;
         }
     }
     console.log({White: white, Black: black});
