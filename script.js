@@ -49,6 +49,11 @@ class ChessPiece {
         this.x = pos.x;
         this.y = pos.y;                                                                                                                                                                                                         
     }
+    updatePos(pos){
+        this.x = pos.x;
+        this.y = pos.y;
+        this.draw();
+    }
     draw(){
         ctx.beginPath();
         ctx.drawImage(this.img, this.x, this.y, width, height);
