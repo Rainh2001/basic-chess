@@ -42,6 +42,7 @@ class Position {
 
 class Player {
     constructor(color){
+        this.turn = 1;
         this.color = color;
         this.pawn = [];
         this.bishop = [];
@@ -53,10 +54,11 @@ class Player {
 }
 
 class ChessPiece {
-    constructor(pos){
+    constructor(pos, isBlack){
         this.img = new Image();
         this.x = pos.x;
-        this.y = pos.y;                                                                                                                                                                                                         
+        this.y = pos.y;    
+        this.isBlack = isBlack;                                                                                                                                                                                                     
     }
     updatePos(pos){
         this.x = pos.x;
@@ -71,43 +73,52 @@ class ChessPiece {
 }
 
 class Pawn extends ChessPiece {
-    constructor(isBlack, pos){
-        super(pos);
-        this.img.src = isBlack ? "img/blackPawn.png" : "img/whitePawn.png";                                                                                                                                                                                                      
+    constructor(pos, isBlack){
+        super(pos, isBlack);
+        this.img.src = isBlack ? "img/blackPawn.png" : "img/whitePawn.png";     
+        this.firstTurn = true;                                                                                                                                                                                                 
+    }
+    getMoves(){
+        let moveDistance;
+        if(this.firstTurn){
+            moveDistance = 2;
+        }else{
+            moveDistance = 1;
+        }
     }
 }
 
 class Rook extends ChessPiece {
-    constructor(isBlack, pos){
-        super(pos);
+    constructor(pos, isBlack){
+        super(pos, isBlack);
         this.img.src = isBlack ? "img/blackRook.png" : "img/whiteRook.png";
     }
 }
 
 class Bishop extends ChessPiece {
-    constructor(isBlack, pos){
-        super(pos);
+    constructor(pos, isBlack){
+        super(pos, isBlack);
         this.img.src = isBlack ? "img/blackBishop.png" : "img/whiteBishop.png";
     }
 }
 
 class Knight extends ChessPiece {
-    constructor(isBlack, pos){
-        super(pos);
+    constructor(pos, isBlack){
+        super(pos, isBlack);
         this.img.src = isBlack ? "img/blackKnight.png" : "img/whiteKnight.png";
     }
 }
 
 class Queen extends ChessPiece {
-    constructor(isBlack, pos){
-        super(pos);
+    constructor(pos, isBlack){
+        super(pos, isBlack);
         this.img.src = isBlack ? "img/blackQueen.png" : "img/whiteQueen.png";
     }
 }
 
 class King extends ChessPiece {
-    constructor(isBlack, pos){
-        super(pos);
+    constructor(pos, isBlack){
+        super(pos, isBlack);
         this.img.src = isBlack ? "img/blackKing.png" : "img/whiteKing.png";
     }
 }
@@ -138,7 +149,7 @@ function setup(){
         let pawn = [];
         for(let j = 0; j < col; j++){
             let pawnLine = i === 0 ? 1 : 6;
-            pawn.push(new Pawn(isBlack, board.pos[pawnLine][j]));
+            pawn.push(new Pawn(board.pos[pawnLine][j], isBlack));
             board.pos[pawnLine][j].state = true;
             board.pos[pawnLine][j].currentPiece = pawn[j];
             pawn[j].img.onload = function(){
@@ -151,19 +162,19 @@ function setup(){
         let bishop = [];
         let knight = [];
         for(let j = 0; j < 2; j++){
-            rook.push(new Rook(isBlack, board.pos[line][j*7]));
+            rook.push(new Rook(board.pos[line][j*7], isBlack));
             board.pos[line][j*7].state = true;
             board.pos[line][j*7].currentPiece = rook[j];
             rook[j].img.onload = function(){
                 rook[j].draw();
             }
-            bishop.push(new Bishop(isBlack, board.pos[line][j*3+2]));
+            bishop.push(new Bishop(board.pos[line][j*3+2], isBlack));
             board.pos[line][j*3+2].state = true;
             board.pos[line][j*3+2].currentPiece = bishop[j];
             bishop[j].img.onload = function(){
                 bishop[j].draw();
             }
-            knight.push(new Knight(isBlack, board.pos[line][j*5+1]));
+            knight.push(new Knight(board.pos[line][j*5+1], isBlack));
             board.pos[line][j*5+1].state = true;
             board.pos[line][j*5+1].currentPiece = knight[j];
             knight[j].img.onload = function(){
@@ -172,7 +183,7 @@ function setup(){
         }
 
         // Queen creation
-        let queen = new Queen(isBlack, board.pos[line][4]);
+        let queen = new Queen(board.pos[line][4], isBlack);
         board.pos[line][4].state = true;
         board.pos[line][4].currentPiece = queen;
         queen.img.onload = function(){
@@ -180,7 +191,7 @@ function setup(){
         }
 
         // King creation
-        let king = new King(isBlack, board.pos[line][3]);
+        let king = new King(board.pos[line][3], isBlack);
         board.pos[line][3].state = true;
         board.pos[line][3].currentPiece = king;
         king.img.onload = function(){
@@ -210,10 +221,10 @@ function getMousePos(event){
         x: event.pageX - this.offsetLeft,
         y: event.pageY - this.offsetTop
     }
-    choosePiece(pos);
+    getBoardPos(pos);
 }
 
-function choosePiece(pos){
+function getBoardPos(pos){
     for(let i = 0; i < board.pos.length; i++){
         for(let j = 0; j < board.pos.length; j++){
             if(pos.x >= board.pos[i][j].x && pos.x <= board.pos[i][j].x + width){
@@ -228,5 +239,5 @@ function choosePiece(pos){
 }
 
 function startMove(pos){
-    console.log(pos.currentPiece);
+    console.log(pos);
 }
