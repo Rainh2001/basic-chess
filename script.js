@@ -198,6 +198,9 @@ function setup(){
             king.draw();
         }
 
+        // Instead of using individual variables and arrays,
+        // create a default Player object and set black or white
+        // equal to that.
         if(isBlack){
             black.pawn = pawn;
             black.rook = rook;
