@@ -219,7 +219,7 @@ function choosePiece(pos){
             if(pos.x >= board.pos[i][j].x && pos.x <= board.pos[i][j].x + width){
                 if(pos.y >= board.pos[i][j].y && pos.y <= board.pos[i][j].y + height){
                     if(board.pos[i][j].state){
-                        startMove(board.pos[i][j].currentPiece);
+                        startMove(board.pos[i][j]);
                     }
                 }
             }
@@ -227,6 +227,6 @@ function choosePiece(pos){
     }
 }
 
-function startMove(piece){
-    console.log(piece);
+function startMove(pos){
+    console.log(pos.currentPiece);
 }
