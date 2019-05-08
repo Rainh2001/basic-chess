@@ -37,29 +37,35 @@ class Position {
         this.y = y;
         this.state = false;
         this.currentPiece;
-        let posx;
-        switch(this.x){
-            case 0: posx = "A"; break;
-            case width: posx = "B"; break;
-            case width*2: posx = "C"; break;
-            case width*3: posx = "D"; break;
-            case width*4: posx = "E"; break;
-            case width*5: posx = "F"; break;
-            case width*6: posx = "G"; break;
-            case width*7: posx = "H"; break;
-        }
-        let posy;
-        switch(this.y){
-            case 0: posy = "8"; break;
-            case height: posy = "7"; break;
-            case height*2: posy = "6"; break;
-            case height*3: posy = "5"; break;
-            case height*4: posy = "4"; break;
-            case height*5: posy = "3"; break;
-            case height*6: posy = "2"; break;
-            case height*7: posy = "1"; break;
-        }
-        this.char = posx + posy;
+        
+        // Converted 22 lines of code in 3
+        let posx = "ABCDEFGH";
+        let posy = "87654321";
+        this.char = posx.charAt(this.x/width) + posy.charAt(this.y/height);
+
+        // let posx;
+        // switch(this.x){
+        //     case 0: posx = "A"; break;
+        //     case width: posx = "B"; break;
+        //     case width*2: posx = "C"; break;
+        //     case width*3: posx = "D"; break;
+        //     case width*4: posx = "E"; break;
+        //     case width*5: posx = "F"; break;
+        //     case width*6: posx = "G"; break;
+        //     case width*7: posx = "H"; break;
+        // }
+        // let posy;
+        // switch(this.y){
+        //     case 0: posy = "8"; break;
+        //     case height: posy = "7"; break;
+        //     case height*2: posy = "6"; break;
+        //     case height*3: posy = "5"; break;
+        //     case height*4: posy = "4"; break;
+        //     case height*5: posy = "3"; break;
+        //     case height*6: posy = "2"; break;
+        //     case height*7: posy = "1"; break;
+        // }
+        // this.char = posx + posy;
     }
     updatePiece(piece){
         this.currentPiece = piece;
