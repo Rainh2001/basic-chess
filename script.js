@@ -37,19 +37,32 @@ class Position {
         this.y = y;
         this.state = false;
         this.currentPiece;
+        let posx;
+        switch(this.x){
+            case 0: posx = "A"; break;
+            case width: posx = "B"; break;
+            case width*2: posx = "C"; break;
+            case width*3: posx = "D"; break;
+            case width*4: posx = "E"; break;
+            case width*5: posx = "F"; break;
+            case width*6: posx = "G"; break;
+            case width*7: posx = "H"; break;
+        }
+        let posy;
+        switch(this.y){
+            case 0: posy = "8"; break;
+            case height: posy = "7"; break;
+            case height*2: posy = "6"; break;
+            case height*3: posy = "5"; break;
+            case height*4: posy = "4"; break;
+            case height*5: posy = "3"; break;
+            case height*6: posy = "2"; break;
+            case height*7: posy = "1"; break;
+        }
+        this.char = posx + posy;
     }
-}
-
-class Player {
-    constructor(color){
-        this.turn = 1;
-        this.color = color;
-        this.pawn = [];
-        this.bishop = [];
-        this.rook = [];
-        this.knight = [];
-        this.king;
-        this.queen;
+    updatePiece(piece){
+        this.currentPiece = piece;
     }
 }
 
@@ -76,7 +89,8 @@ class Pawn extends ChessPiece {
     constructor(pos, isBlack){
         super(pos, isBlack);
         this.img.src = isBlack ? "img/blackPawn.png" : "img/whitePawn.png";     
-        this.firstTurn = true;                                                                                                                                                                                                 
+        this.firstTurn = true;
+        this.char = "p";                                                                                                                                                                                          
     }
     getMoves(){
         let moveDistance;
@@ -92,6 +106,7 @@ class Rook extends ChessPiece {
     constructor(pos, isBlack){
         super(pos, isBlack);
         this.img.src = isBlack ? "img/blackRook.png" : "img/whiteRook.png";
+        this.char = "r";
     }
 }
 
@@ -99,6 +114,7 @@ class Bishop extends ChessPiece {
     constructor(pos, isBlack){
         super(pos, isBlack);
         this.img.src = isBlack ? "img/blackBishop.png" : "img/whiteBishop.png";
+        this.char = "b";
     }
 }
 
@@ -106,6 +122,7 @@ class Knight extends ChessPiece {
     constructor(pos, isBlack){
         super(pos, isBlack);
         this.img.src = isBlack ? "img/blackKnight.png" : "img/whiteKnight.png";
+        this.char = "kn";
     }
 }
 
@@ -113,6 +130,7 @@ class Queen extends ChessPiece {
     constructor(pos, isBlack){
         super(pos, isBlack);
         this.img.src = isBlack ? "img/blackQueen.png" : "img/whiteQueen.png";
+        this.char = "q";
     }
 }
 
@@ -120,6 +138,7 @@ class King extends ChessPiece {
     constructor(pos, isBlack){
         super(pos, isBlack);
         this.img.src = isBlack ? "img/blackKing.png" : "img/whiteKing.png";
+        this.char = "k";
     }
 }
 
@@ -137,9 +156,6 @@ window.onload = function(){
 
 function setup(){
     board = new Board();
-
-    black = new Player("black");
-    white = new Player("white");
     
     for(let i = 0; i < 2; i++){
         let isBlack = i === 0 ? true : false;
@@ -183,9 +199,9 @@ function setup(){
         }
 
         // Queen creation
-        let queen = new Queen(board.pos[line][4], isBlack);
+        let queen = new Queen(board.pos[line][4], isBlack)
         board.pos[line][4].state = true;
-        board.pos[line][4].currentPiece = queen;
+        board.pos[line][4].updatePiece(queen);
         queen.img.onload = function(){
             queen.draw();
         }
@@ -193,28 +209,9 @@ function setup(){
         // King creation
         let king = new King(board.pos[line][3], isBlack);
         board.pos[line][3].state = true;
-        board.pos[line][3].currentPiece = king;
+        board.pos[line][3].updatePiece(king);
         king.img.onload = function(){
             king.draw();
-        }
-
-        // Instead of using individual variables and arrays,
-        // create a default Player object and set black or white
-        // equal to that.
-        if(isBlack){
-            black.pawn = pawn;
-            black.rook = rook;
-            black.bishop = bishop;
-            black.knight = knight;
-            black.queen = queen;
-            black.king = king;
-        } else {
-            white.pawn = pawn;
-            white.rook = rook;
-            white.bishop = bishop;
-            white.knight = knight;
-            white.queen = queen;
-            white.king = king;
         }
     }
 }
@@ -242,5 +239,5 @@ function getBoardPos(pos){
 }
 
 function startMove(pos){
-    console.log(pos);
+    console.log(pos.char);
 }
