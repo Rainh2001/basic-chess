@@ -11,6 +11,8 @@ var height;
 var black;
 var white;
 
+var possibleMoves = [];
+
 class Board {
     constructor(){
         this.pos = [];
@@ -37,6 +39,7 @@ class Position {
         this.y = y;
         this.state = false;
         this.currentPiece;
+        this.color;
 
         let posx = "ABCDEFGH";
         let posy = "87654321";
@@ -77,16 +80,23 @@ class Pawn extends ChessPiece {
     }
     getMoves(){
         let moveDistance = this.firstTurn ? 2 : 1;
-        if(this.isBlack){
-            for(let i = 1; i < moveDistance+1; i++){
-                let pos = board.pos[this.indexY+i][this.indexX];
-                if(!pos.state){
-                    ctx.beginPath();
-                    ctx.fillStyle = "green";
-                    ctx.arc(pos.x + width/2, pos.y + height/2, width/2, 0, 2*Math.PI);
-                    ctx.stroke();
-                    ctx.closePath();
-                }
+        let blocked = false;
+        for(let i = 1; i < moveDistance+1; i++){
+            let pos;
+            if(this.isBlack){
+                pos = board.pos[this.indexY+i][this.indexX];
+            } else {
+                pos = board.pos[this.indexY-i][this.indexX];
+            }
+            if(!pos.state && !blocked){
+                possibleMoves.push(pos);
+                ctx.beginPath();
+                ctx.fillStyle = "lightgreen";
+                ctx.arc(pos.x + width/2, pos.y + height/2, width/2*0.75, 0, 2*Math.PI);
+                ctx.fill();
+                ctx.closePath();
+            }else{
+                blocked = true;
             }
         }
     }
@@ -139,7 +149,7 @@ window.onload = function(){
     width = canvas.width / col;
     height = canvas.height / row;
 
-    canvas.addEventListener("click", getMousePos);
+    canvas.addEventListener("click", checkPos);
 
     setup();
 }
@@ -206,12 +216,44 @@ function setup(){
     }
 }
 
-function getMousePos(event){
-    let pos = {
+function checkPos(event){
+    let mousePos = {
         x: event.pageX - this.offsetLeft,
         y: event.pageY - this.offsetTop
     }
-    getBoardPos(pos);
+    pos = getBoardPos(mousePos);
+
+    let start = false;
+    if(possibleMoves.length === 0 && pos.state){
+        start = true;
+    }else{
+        if(pos.state){
+            for(let i = 0; i < possibleMoves.length; i++){
+                if(pos.x === possibleMoves[i].x && pos.y === possibleMoves[i].y){
+                    start = true;
+                }
+            }
+        }
+    }
+    
+    if(start){
+        startMove(pos);
+    } else {
+        resetPossibleMoves();
+        if(pos.state){
+            startMove(pos);
+        }
+    }
+}
+
+function resetPossibleMoves(){
+    possibleMoves.forEach(pos => {
+        ctx.beginPath();
+        ctx.fillStyle = pos.color;
+        ctx.fillRect(pos.x, pos.y, width, height);
+        ctx.fill();
+    });
+    possibleMoves = [];
 }
 
 function getBoardPos(pos){
@@ -219,9 +261,7 @@ function getBoardPos(pos){
         for(let j = 0; j < board.pos.length; j++){
             if(pos.x >= board.pos[i][j].x && pos.x <= board.pos[i][j].x + width){
                 if(pos.y >= board.pos[i][j].y && pos.y <= board.pos[i][j].y + height){
-                    if(board.pos[i][j].state){
-                        startMove(board.pos[i][j]);
-                    }
+                    return board.pos[i][j];
                 }
             }
         }
@@ -229,6 +269,5 @@ function getBoardPos(pos){
 }
 
 function startMove(pos){
-    console.log(`Pos: ${pos.char}   Piece: ${pos.currentPiece.char}`);
     pos.currentPiece.getMoves();
 }
